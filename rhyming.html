@@ -1,0 +1,39 @@
+<body>
+    <input id="word-box" type="text">
+    <div class="container"></div>
+    <ul id="word-list"></ul>
+
+    <script>
+        const wordBox = document.getElementById('word-box');
+        const wordList = document.getElementById('word-list');
+
+        function populateList(data) {
+            // console.log(data);
+            // console.log("results", data.results);
+
+            // const rhymeObject = data[0];
+
+            for (let rhymeObject of data) {
+                const wordText = document.createTextNode(rhymeObject.word + ", " + rhymeObject.score);
+                const listItem = document.createElement('li');
+                listItem.appendChild(wordText);
+                wordList.appendChild(listItem);
+            }
+        }
+
+        function onWordInput() {
+            console.log(wordBox.value);
+        }
+
+        wordBox.addEventListener('input', onWordInput);
+
+        function unpackBody(response) {
+            return response.json();
+        }
+
+        fetch("https://rhymebrain.com/talk?function=getRhymes&word=hello")
+            .then(unpackBody)
+            .then(populateList);
+
+    </script>
+</body>

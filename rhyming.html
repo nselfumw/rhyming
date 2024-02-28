@@ -1,11 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        p {
+            display: inline-block;
+            padding: 4px;
+        }
+    </style>
+</head>
+
 <body>
     <input id="word-box" type="text">
-    <div class="container"></div>
+    <div id="word-container" class="container"></div>
     <ul id="word-list"></ul>
+    
 
     <script>
         const wordBox = document.getElementById('word-box');
         const wordList = document.getElementById('word-list');
+        const wordContainer = document.getElementById('word-container');
 
         function populateList(data) {
             // console.log(data);
@@ -14,15 +26,24 @@
             // const rhymeObject = data[0];
 
             for (let rhymeObject of data) {
-                const wordText = document.createTextNode(rhymeObject.word + ", " + rhymeObject.score);
-                const listItem = document.createElement('li');
-                listItem.appendChild(wordText);
-                wordList.appendChild(listItem);
+                const wordText = document.createTextNode(rhymeObject.word);
+                const paraItem = document.createElement('p');
+                paraItem.setAttribute('style', "font-size:" + (rhymeObject.score / 10) + "px");
+                paraItem.appendChild(wordText);
+                wordContainer.appendChild(paraItem);
             }
         }
 
         function onWordInput() {
             console.log(wordBox.value);
+            if (wordBox.value.length < 3) return;
+
+            // clear container
+            wordContainer.innerHTML = "";
+
+            fetch("https://rhymebrain.com/talk?function=getRhymes&word=" + wordBox.value)
+                .then(unpackBody)
+                .then(populateList);
         }
 
         wordBox.addEventListener('input', onWordInput);
@@ -31,9 +52,7 @@
             return response.json();
         }
 
-        fetch("https://rhymebrain.com/talk?function=getRhymes&word=hello")
-            .then(unpackBody)
-            .then(populateList);
+        
 
     </script>
 </body>

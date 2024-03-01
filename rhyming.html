@@ -25,6 +25,9 @@
 
             // const rhymeObject = data[0];
 
+            // clear container
+            wordContainer.innerHTML = "";
+
             for (let rhymeObject of data) {
                 const wordText = document.createTextNode(rhymeObject.word);
                 const paraItem = document.createElement('p');
@@ -38,12 +41,11 @@
             console.log(wordBox.value);
             if (wordBox.value.length < 3) return;
 
-            // clear container
-            wordContainer.innerHTML = "";
 
             fetch("https://rhymebrain.com/talk?function=getRhymes&word=" + wordBox.value)
                 .then(unpackBody)
                 .then(populateList);
+            
         }
 
         wordBox.addEventListener('input', onWordInput);
